@@ -262,10 +262,19 @@ const Map = () => {
     const loadGeoJSON = async () => {
       try {
         setIsLoadingGeoJSON(true);
-        const response = await fetch(`${import.meta.env.BASE_URL}combined.geojson`);
+        const response = await fetch('./combined.geojson', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          },
+          mode: 'cors'
+        });
+        
         if (!response.ok) {
           throw new Error(`Failed to load GeoJSON file: ${response.status} ${response.statusText}`);
         }
+        
         const data = await response.json();
         
         if (Object.keys(postcodeMap).length > 0) {
