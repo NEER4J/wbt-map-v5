@@ -23,6 +23,9 @@ import purple from "../../assets/markersImage/purple.png";
 import { LiaMapMarkerSolid } from "react-icons/lia";
 import RegionSidebar from "../RegionSidebar/RegionSidebar";
 import { Link } from "react-router-dom";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdMiscellaneousServices, MdOutlineMyLocation } from "react-icons/md";
+import { BsFillSignpost2Fill } from "react-icons/bs";
 
 const jumpMarkerAnimation = `
   @keyframes markerJump {
@@ -211,21 +214,21 @@ const createMarkerIcon = (colors) => {
   
   // Create a default icon as fallback
   const defaultIcon = L.divIcon({
-    html: `<div style="width: 30px; height: 42px; background-color: red; border-radius: 50%;"></div>`,
+    html: `<div style="width: 40px; height: 56px; background-color: red; border-radius: 50%;"></div>`,
     className: "custom-marker", 
-    iconSize: [30, 42],
-    iconAnchor: [15, 42],
+    iconSize: [40, 56],
+    iconAnchor: [20, 56],
     popupAnchor: [0, -40],
   });
 
   try {
     return L.divIcon({
-      html: `<div style="width: 30px; height: 42px; display: flex; align-items: center; justify-content: center;">
+      html: `<div style="width: 40px; height: 56px; display: flex; align-items: center; justify-content: center;">
               <img src="${markerImage}" style="width: 100%; height: 100%; object-fit: contain; display: block;" />
             </div>`,
       className: "custom-marker", 
-      iconSize: [30, 42],
-      iconAnchor: [15, 42],
+      iconSize: [40, 56],
+      iconAnchor: [20, 56],
       popupAnchor: [0, -40],
     });
   } catch (error) {
@@ -333,7 +336,6 @@ const Map = () => {
       setSelectedRegion(null);
       setSelectedCityId(null);
       if (mapRef.current) {
-        // Return to default view smoothly
         mapRef.current.setView(DEFAULT_CENTER, DEFAULT_ZOOM, {
           animate: true,
           duration: 1
@@ -341,38 +343,84 @@ const Map = () => {
       }
       return;
     }
+
     setSelectedRegion(region);
     setSelectedCityId(cityId);
+
     if (mapRef.current && processedGeoData && processedGeoData.features) {
       const map = mapRef.current;
-      const regionFeatures = [];
-      processedGeoData.features.forEach(feature => {
-        if (feature.properties.region === region) {
-          regionFeatures.push(feature);
-          if (cityId && feature.properties.locationId === cityId) {
-            const featureLayer = L.geoJSON(feature);
-            const bounds = featureLayer.getBounds();
-            if (bounds) {
-              map.flyToBounds(bounds, { 
-                padding: [100, 100],
-                duration: 1.2,
-                easeLinearity: 0.25,
-                maxZoom: 11 
-              });
-            }
-          }
-        }
-      });
-      if (regionFeatures.length > 0 && !cityId) {
-        const regionsLayer = L.geoJSON(regionFeatures);
-        const bounds = regionsLayer.getBounds();
-        if (bounds) {
-          map.flyToBounds(bounds, { 
+      
+      if (cityId) {
+        // Improved city selection logic
+        const cityData = postcodeMap[cityId];
+        
+        // First try to get coordinates from postcodeMap
+        if (cityData?.lat && cityData?.lang) {
+          const cityLat = parseFloat(cityData.lat);
+          const cityLng = parseFloat(cityData.lang);
+          
+          // Create a point bounds with some padding
+          const pointBounds = L.latLngBounds(
+            [cityLat - 0.05, cityLng - 0.05],
+            [cityLat + 0.05, cityLng + 0.05]
+          );
+          
+          map.flyToBounds(pointBounds, {
             padding: [50, 50],
             duration: 1.2,
-            easeLinearity: 0.25,
-            maxZoom: 9 
+            maxZoom: 12  // Slightly higher zoom for point locations
           });
+          return;
+        }
+    
+        // Fallback to GeoJSON feature if coordinates missing
+        const cityFeature = processedGeoData?.features?.find(
+          f => f.properties.locationId === cityId
+        );
+    
+        if (cityFeature) {
+          const featureLayer = L.geoJSON(cityFeature);
+          const bounds = featureLayer.getBounds();
+          
+          if (bounds.isValid()) {
+            // Calculate area of the bounds
+            const boundsArea = bounds.getNorthEast().distanceTo(bounds.getSouthWest());
+            
+            // Adjust zoom based on feature size
+            const zoomOptions = boundsArea > 50000 ? { 
+              maxZoom: 9 
+            } : {
+              maxZoom: 12
+            };
+    
+            map.flyToBounds(bounds, {
+              padding: [50, 50],
+              duration: 1.2,
+              ...zoomOptions
+            });
+            return;
+          }
+        }
+    
+        // Final fallback to default region zoom
+        handleRegionSelect(region);
+      } else {
+        // Handle region selection
+        const regionFeatures = processedGeoData.features.filter(
+          feature => feature.properties.region === region
+        );
+        
+        if (regionFeatures.length > 0) {
+          const regionsLayer = L.geoJSON(regionFeatures);
+          const bounds = regionsLayer.getBounds();
+          if (bounds) {
+            map.flyToBounds(bounds, {
+              padding: [50, 50],
+              duration: 1.2,
+              easeLinearity: 0.25,
+              maxZoom: 9
+            });
+          }
         }
       }
     }
@@ -543,6 +591,28 @@ const Map = () => {
         }
       },
       click: (e) => {
+        const map = e.target._map;
+        const featureLayer = L.geoJSON(feature);
+        const bounds = featureLayer.getBounds();
+        
+        if (bounds) {
+          // Get the center point of the bounds
+          const center = bounds.getCenter();
+          
+          // Get current zoom level
+          const currentZoom = map.getZoom();
+          
+          // Calculate new zoom level (increment by 2)
+          const newZoom = Math.min(currentZoom + 2, 11);
+          
+          // Fly to the center with the new zoom level
+          map.flyTo(center, newZoom, {
+            duration: 1.2,
+            easeLinearity: 0.25
+          });
+        }
+        
+        // If there's a service selected, also show the popup
         if ((selectedService === 'all' || selectedService) && layer._popup) {
           layer.openPopup(e.latlng);
         }
@@ -564,6 +634,12 @@ const Map = () => {
           style={getFeatureStyle}
           onEachFeature={onEachFeature}
           simplifyFactor={0.1}
+          renderer={L.canvas()}
+          pane="overlayPane"
+          updateWhenZooming={false}
+          updateWhenIdle={true}
+          updateInterval={50}
+          zIndex={1}
         />
       );
     }
@@ -573,6 +649,12 @@ const Map = () => {
         data={processedGeoData}
         style={getFeatureStyle}
         onEachFeature={onEachFeature}
+        renderer={L.canvas()}
+        pane="overlayPane"
+        updateWhenZooming={false}
+        updateWhenIdle={true}
+        updateInterval={50}
+        zIndex={1}
       />
     );
   }, [processedGeoData, getFeatureStyle, onEachFeature, selectedService, currentZoom]);
@@ -723,7 +805,13 @@ const Map = () => {
       try {
         const { data, error } = await supabase
           .from('clients')
-          .select('*');
+          .select(`
+            *,
+            locations (
+              city_name,
+              region
+            )
+          `);
         if (error) throw error;
         console.log('Fetched clients:', data);
         const validClients = data.filter(client => {
@@ -891,6 +979,21 @@ const Map = () => {
         minZoom={4}
         maxZoom={18}
         zoomSnap={0.5}
+        preferCanvas={true}
+        renderer={L.canvas()}
+        inertia={false}
+        inertiaDeceleration={0}
+        inertiaMaxSpeed={0}
+        tap={false}
+        dragging={true}
+        animate={false}
+        rendererOptions={{
+          padding: 0.5,
+          tolerance: 0.5,
+          updateWhenIdle: true,
+          updateWhenZooming: false,
+          updateInterval: 50
+        }}
       >
         {processedGeoData && renderGeoJSONLayers()}
         {filteredClients.map((client) => {
@@ -933,19 +1036,20 @@ const Map = () => {
               <Popup>
                 <div className="client-popup">
                   <h3>{client.business_name}</h3>
-                  {/* <p><strong>Country:</strong> {client.country}</p> */}
-                  <p><strong>Address:</strong> {client.address}</p>
+                  <p className="client-address"><span><IoLocationSharp style={{color: '#000', fontSize: '22px'}} /></span><span>{client.address}</span></p>
+                  <p className="client-postcode"><span><BsFillSignpost2Fill style={{color: '#000', fontSize: '19px'}} /></span><span>{client.postcode}</span></p>
+                  {client.locations && (
+                    <p className="client-location">
+                      <span><MdOutlineMyLocation style={{color: '#000', fontSize: '22px'}} /></span>
+                      <span>{client.locations.city_name}</span>
+                    </p>
+                  )}
                   {serviceNames.length > 0 && (
                     <div className="client-services">
-                      <p><strong>Services:</strong></p>
-                      <ul>
-                        {serviceNames.map((name, index) => (
-                          <li key={index}>
-                            <span className="service-color-dot" style={{backgroundColor: serviceColors[index]}}></span>
-                            {name}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="client-service-item">
+                          <MdMiscellaneousServices style={{color: '#000', fontSize: '22px'}}/>
+                          <span>{serviceNames.join(', ')}</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1086,6 +1190,124 @@ const Map = () => {
           white-space: nowrap;
           transform-origin: center;
           pointer-events: none;
+        }
+
+        /* Enhanced styles to completely fix polygon movement */
+        .leaflet-layer {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+        
+        .leaflet-tile {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+        
+        .leaflet-marker-icon {
+          transform-origin: 50% 100% !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-map-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-tile-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-overlay-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-shadow-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-marker-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-tooltip-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-popup-pane {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-overlay-pane svg {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
+        }
+
+        .leaflet-overlay-pane canvas {
+          transform-origin: 0 0 !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          transform-style: preserve-3d !important;
+          -webkit-transform-style: preserve-3d !important;
         }
       `}</style>
     </div>

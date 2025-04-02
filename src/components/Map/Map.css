@@ -579,3 +579,26 @@ border-bottom: solid 1px gainsboro;
 .leaflet-marker-icon {
   z-index: 1000 !important;
 }
+
+.client-address {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.client-service-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.client-postcode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.client-location {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

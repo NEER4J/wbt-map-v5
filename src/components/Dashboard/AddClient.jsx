@@ -17,6 +17,7 @@ const AddClient = () => {
     lat: '',
     lang: '',
     location_id: null,
+    postcode: ''
   });
   const [services, setServices] = useState([]);
   const [locations, setLocations] = useState([]);
@@ -83,6 +84,7 @@ const AddClient = () => {
   const validateForm = () => {
     if (!formData.business_name) return 'Business name is required';
     if (!formData.address) return 'Address is required';
+    if (!formData.postcode) return 'Postcode is required';
     if (!formData.country) return 'Country is required';
     if (!formData.lat || !formData.lang) return 'Coordinates are required';
     if (!formData.location_id) return 'Please select a location';
@@ -155,6 +157,7 @@ const AddClient = () => {
         .insert([{
           business_name: formData.business_name,
           address: formData.address,
+          postcode: formData.postcode,
           country: formData.country,
           lat: formData.lat,
           lang: formData.lang,
@@ -236,6 +239,7 @@ const AddClient = () => {
       setFormData({
         business_name: '',
         address: '',
+        postcode: '',
         country: '',
         lat: '',
         lang: '',
@@ -323,7 +327,17 @@ const AddClient = () => {
               required
             />
           </div>
-          
+          <div className="form-group">
+            <label htmlFor="postcode">Postcode*</label>
+            <input
+              id="postcode"
+              name="postcode"
+              type="text"
+              value={formData.postcode}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="country">Country*</label>
             <input
