@@ -211,8 +211,6 @@ const getClosestMarkerImage = (color) => {
 const createMarkerIcon = (colors) => {
   let markerImage = colors.length > 1 ? multiplecolor : getClosestMarkerImage(colors[0]);
   console.log('Creating marker icon with image:', markerImage);
-  
-  // Create a default icon as fallback
   const defaultIcon = L.divIcon({
     html: `<div style="width: 40px; height: 56px; background-color: red; border-radius: 50%;"></div>`,
     className: "custom-marker", 
@@ -220,7 +218,6 @@ const createMarkerIcon = (colors) => {
     iconAnchor: [20, 56],
     popupAnchor: [0, -40],
   });
-
   try {
     return L.divIcon({
       html: `<div style="width: 40px; height: 56px; display: flex; align-items: center; justify-content: center;">
@@ -239,7 +236,7 @@ const createMarkerIcon = (colors) => {
 const CHUNK_SIZE = 10;
 const DEFAULT_CENTER = [54.5, -2.5];
 const DEFAULT_ZOOM = 6;
-const ZOOM_THRESHOLD = 5; // Lower the zoom threshold to see if markers appear
+const ZOOM_THRESHOLD = 5; 
 const Map = () => { 
   const [clients, setClients] = useState([]);
   const [services, setServices] = useState({});
@@ -273,13 +270,10 @@ const Map = () => {
           },
           mode: 'cors'
         });
-        
         if (!response.ok) {
           throw new Error(`Failed to load GeoJSON file: ${response.status} ${response.statusText}`);
         }
-        
         const data = await response.json();
-        
         if (Object.keys(postcodeMap).length > 0) {
           const processedData = {
             type: 'FeatureCollection',
@@ -295,7 +289,6 @@ const Map = () => {
                 feature.properties.region = 'default';
                 feature.properties.color = REGION_COLORS.default;
               }
-              
               return feature;
             })
           };
@@ -308,10 +301,8 @@ const Map = () => {
         setIsLoadingGeoJSON(false);
       }
     };
-
     loadGeoJSON();
   }, [postcodeMap]);
-
   const mapBounds = useMemo(() => {
     if (!processedGeoData || !processedGeoData.features || processedGeoData.features.length === 0) {
       return null;
@@ -319,7 +310,6 @@ const Map = () => {
     const geojsonLayer = L.geoJSON(processedGeoData);
     return geojsonLayer.getBounds();
   }, [processedGeoData]);
-
   const getFeatureStyle = useCallback((feature) => {
     const color = feature.properties?.color || REGION_COLORS.default;
     const isSelected = selectedRegion === feature.properties.region;
@@ -343,56 +333,39 @@ const Map = () => {
       }
       return;
     }
-
     setSelectedRegion(region);
     setSelectedCityId(cityId);
-
     if (mapRef.current && processedGeoData && processedGeoData.features) {
       const map = mapRef.current;
-      
       if (cityId) {
-        // Improved city selection logic
         const cityData = postcodeMap[cityId];
-        
-        // First try to get coordinates from postcodeMap
         if (cityData?.lat && cityData?.lang) {
           const cityLat = parseFloat(cityData.lat);
           const cityLng = parseFloat(cityData.lang);
-          
-          // Create a point bounds with some padding
           const pointBounds = L.latLngBounds(
             [cityLat - 0.05, cityLng - 0.05],
             [cityLat + 0.05, cityLng + 0.05]
           );
-          
           map.flyToBounds(pointBounds, {
             padding: [50, 50],
             duration: 1.2,
-            maxZoom: 12  // Slightly higher zoom for point locations
+            maxZoom: 12  
           });
           return;
         }
-    
-        // Fallback to GeoJSON feature if coordinates missing
         const cityFeature = processedGeoData?.features?.find(
           f => f.properties.locationId === cityId
         );
-    
         if (cityFeature) {
           const featureLayer = L.geoJSON(cityFeature);
           const bounds = featureLayer.getBounds();
-          
           if (bounds.isValid()) {
-            // Calculate area of the bounds
             const boundsArea = bounds.getNorthEast().distanceTo(bounds.getSouthWest());
-            
-            // Adjust zoom based on feature size
             const zoomOptions = boundsArea > 50000 ? { 
               maxZoom: 9 
             } : {
               maxZoom: 12
             };
-    
             map.flyToBounds(bounds, {
               padding: [50, 50],
               duration: 1.2,
@@ -401,15 +374,11 @@ const Map = () => {
             return;
           }
         }
-    
-        // Final fallback to default region zoom
         handleRegionSelect(region);
       } else {
-        // Handle region selection
         const regionFeatures = processedGeoData.features.filter(
           feature => feature.properties.region === region
         );
-        
         if (regionFeatures.length > 0) {
           const regionsLayer = L.geoJSON(regionFeatures);
           const bounds = regionsLayer.getBounds();
@@ -594,25 +563,15 @@ const Map = () => {
         const map = e.target._map;
         const featureLayer = L.geoJSON(feature);
         const bounds = featureLayer.getBounds();
-        
         if (bounds) {
-          // Get the center point of the bounds
           const center = bounds.getCenter();
-          
-          // Get current zoom level
           const currentZoom = map.getZoom();
-          
-          // Calculate new zoom level (increment by 2)
           const newZoom = Math.min(currentZoom + 2, 11);
-          
-          // Fly to the center with the new zoom level
           map.flyTo(center, newZoom, {
             duration: 1.2,
             easeLinearity: 0.25
           });
         }
-        
-        // If there's a service selected, also show the popup
         if ((selectedService === 'all' || selectedService) && layer._popup) {
           layer.openPopup(e.latlng);
         }
@@ -658,7 +617,6 @@ const Map = () => {
       />
     );
   }, [processedGeoData, getFeatureStyle, onEachFeature, selectedService, currentZoom]);
-
   const filteredClients = useMemo(() => {
     if (!selectedService) return clients;
     if (selectedService === 'all') return clients;
@@ -954,8 +912,11 @@ const Map = () => {
       </div>
       {error && <div className="error-message">Error loading data: {error}</div>}
       {(loading || isLoadingGeoJSON) && (
-        <div className="loading-message">
-          Loading map data...
+        <div className="map-loader-container">
+          <div className="map-loader">
+            <div className="map-loader-spinner"></div>
+            <div className="map-loader-text">Loading map data...</div>
+          </div>
         </div>
       )}
       <MapContainer
@@ -1005,23 +966,19 @@ const Map = () => {
             services: clientServices[client.id],
             currentZoom: currentZoom
           });
-          
           const serviceColors = getClientServiceColors(client.id);
           console.log('Service colors for client:', {
             clientId: client.id,
             colors: serviceColors
           });
-          
           const serviceNames = getClientServiceNames(client.id);
           const isActive = shouldAnimateMarker(client.id);
           const clientServiceIds = clientServices[client.id] || [];
           const primaryServiceId = clientServiceIds[0] || null;
-          
           if (!client.lat || !client.lang || isNaN(parseFloat(client.lat)) || isNaN(parseFloat(client.lang))) {
             console.warn('Invalid coordinates for client:', client.id);
             return null;
           }
-
           const position = [parseFloat(client.lat), parseFloat(client.lang)];
           console.log('Creating marker at position:', position);
           
@@ -1098,18 +1055,14 @@ const Map = () => {
         .service-availability li {
           margin-bottom: 5px;
         }
-        
-        /* Search bar styling */
         .client-search-container {
           position: relative;
           width: 300px;
           margin-left: 20px; 
         }
-        
         .search-input-wrapper {
           position: relative;
         }
-        
         .client-search-input {
           width: 100%;
           padding: 10px 15px;
@@ -1123,13 +1076,11 @@ const Map = () => {
           right: auto; 
           width: 100%; 
         }
-        
         .client-search-input:focus {
           outline: none;
           border-color: var(--secondary-color);
           box-shadow: 0 2px 8px rgba(44, 125, 160, 0.2);
         }
-
         .clear-search-button {
           position: absolute;
           right: 10px;
@@ -1141,7 +1092,6 @@ const Map = () => {
           cursor: pointer;
           color: #888;
         }
-        
         .search-results {
           position: absolute;
           top: 100%;
@@ -1159,7 +1109,6 @@ const Map = () => {
           list-style: none;
           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
         .search-result-item {
           padding: 8px 12px;
           cursor: pointer;
@@ -1308,6 +1257,58 @@ const Map = () => {
           -webkit-backface-visibility: hidden !important;
           transform-style: preserve-3d !important;
           -webkit-transform-style: preserve-3d !important;
+        }
+
+        /* Map Loader Styles */
+        .map-loader-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .map-loader {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+          background: #fff;
+          padding: 30px 50px;
+          border-radius: 15px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+        .map-loader-spinner {
+          width: 50px;
+          height: 50px;
+          border: 5px solid rgba(243, 243, 243, 0.8);
+          border-top: 5px solid #2E86AB;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        .map-loader-text {
+          font-size: 16px;
+          color: #2E86AB;
+          font-weight: 500;
+          text-align: center;
+          animation: pulse 1.5s ease-in-out infinite;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+          0% { opacity: 0.6; }
+          50% { opacity: 1; }
+          100% { opacity: 0.6; }
         }
       `}</style>
     </div>
