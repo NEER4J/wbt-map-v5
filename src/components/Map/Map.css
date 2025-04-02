@@ -1,0 +1,581 @@
+/* Map.css */
+:root {
+  --primary-color: #114859;
+  --secondary-color: #2C7DA0;
+  --accent-color: #61A5C2;
+  --light-background: #F8F9FA;
+  --text-color: #333;
+  --border-color: #E9ECEF;
+}
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+.header {
+   background-color: #fff;
+   box-shadow: 0 2px 4px #0000001a;
+}
+.city-label {
+    background: transparent;
+    color: white;
+    padding: 5px;
+    border: none;
+    font-size: 15px;
+}
+.hidden-marker {
+    display: none;
+  }
+  .custom-pin-marker {
+    width: 30px;
+    height: 42px;
+  }
+  .pin-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .pin-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #114859;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    overflow: hidden;
+  }
+  .pin-bottom {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    width: 16px;
+    height: 25px;
+    background-color: #000;
+    border: 2px solid #fff;
+    transform: translateX(-50%) rotate(45deg);
+    transform-origin: 0 0;
+    border-radius: 0 50% 50% 50%;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+  }
+  .pin-top.multi-color {
+    position: relative;
+    overflow: hidden;
+    background-color: transparent;
+  }
+  .color-half {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+  }
+  .color-half:first-child {
+    left: 0;
+  }
+  .color-hal:last-child {
+    right: 0;
+  }
+  .color-segment {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+    transform-origin: center left;
+  }
+  .client-popup h3 {
+    margin-top: 0;
+    color: #114859;
+    font-size: 16px;
+  }
+  .client-popup p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  .client-services ul {
+    margin: 5px 0;
+    padding-left: 20px;
+    list-style: none;
+  }
+  .client-services li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .service-color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .error-message {
+    background-color: #ffdddd;
+    color: #d8000c;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+  }
+  .loading-message {
+    background-color: #e8f4f8;
+    color: #114859;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+  }
+.region-legend-container {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .region-legend {
+    font-size: 12px;
+  }
+  .region-legend h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px !important;
+    font-size: 12px !important;
+  }
+  .color-box {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+  }
+  .service-color-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  .client-popup {
+    min-width: 200px;
+  }
+  .client-popup h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  .client-services ul {
+    margin: 0;
+    padding-left: 10px;
+    list-style-type: none;
+  }
+  .client-services li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+.header-left {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  padding: 10px 20px;
+}
+.client-search-input {
+
+}
+.logo {
+  height: 50px;
+  object-fit: contain;
+  margin-right: 20px;
+}
+
+.logo:hover {
+  cursor: pointer;
+}
+.service-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  transition: all .3s ease;
+  background-color: #ffffff1a;
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+.service-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0 20px;
+  border-bottom: solid 1px gainsboro;
+}
+.service-button::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+.service-button:hover::after {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.service-button.active::after {
+  background-color: currentColor;
+}
+.service-button:hover {
+    /* transform: translateY(-2px); /
+    / box-shadow: 0 4px 10px #0003; */
+    border-bottom: solid 5px;
+}
+.service-button.active {
+  background-color: #fff;
+  color: var(--primary-color);
+  /* box-shadow: 0 4px 15px #0003; */
+  border-bottom: solid 5px;
+  border-radius: 0;
+}
+.service-button:hover:not(.active) {
+  background-color: rgba(0,0,0,0.05) !important;
+  bottom: -1px !important;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.error-message, .loading-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.error-message {
+  background-color: rgba(220, 53, 69, 0.9);
+}
+
+.region-legend-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 15px;
+}
+
+.region-legend h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+.client-popup {
+  font-family: 'Inter', sans-serif;
+  max-width: 250px;
+}
+
+.client-popup h3 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.client-services ul {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.service-color-dot {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.hidden-marker {
+  display: none;
+}
+
+@keyframes markerPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.marker-jump {
+  animation: markerPulse 0.5s ease-in-out;
+}
+
+
+.availability-tooltip {
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  max-width: 300px;
+  font-family: 'Inter', sans-serif;
+  background: transparent;
+}
+
+.service-availability {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.service-color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.leaflet-tooltip.availability-tooltip {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.service-item {
+  margin-bottom: 15px;
+}
+.service-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.business-entry {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+.business-name {
+  font-size: 0.9em;
+  font-weight: 700;
+}
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+.slot-count {
+  font-size: 0.9em;
+  color: #666;
+}
+.businesses-list {
+  list-style: none;
+  padding-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.businesses-list li {
+  margin-bottom: 3px;
+  font-size: 0.9em;
+}
+
+.service-color-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.reset-highlight-btn {
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.reset-highlight-btn:hover {
+  background: #f4f4f4;
+}
+.leaflet-interactive {
+  transition: all 0.2s ease-in-out;
+}
+.leaflet-interactive:hover {
+  /* scale: 1.01; */
+  stroke-width: 2;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+
+
+  .client-search-container {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+    top: 53px;
+  }
+
+  .service-buttons {
+    justify-content: center;
+  }
+}
+
+.service-marker {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.leaflet-container {
+  background: #a4a7a7 !important;
+}
+
+.leaflet-control-attribution a {
+  display: none !important;
+}
+
+.postcode-label {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  pointer-events: none !important;
+}
+
+.postcode-label div {
+  width: 60px !important;
+  height: 30px !important;
+  font-size: 14px !important;
+  font-weight: 600;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+}
+
+
+.header-top {
+display: flex;
+align-items: center;
+border-bottom: solid 1px gainsboro;
+}
+
+.leaflet-container {
+  transition: transform 0.3s ease-out;
+}
+
+.leaflet-zoom-animated {
+  transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+
+.map-login-button {
+  position: fixed;
+  top: 71px;
+  right: 2px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 7px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-marker {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  z-index: 1000 !important;
+}
+
+.custom-marker img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  display: block !important;
+}
+
+.leaflet-marker-icon {
+  z-index: 1000 !important;
+  background: none !important;
+  border: none !important;
+}
+
+.leaflet-marker-shadow {
+  display: none !important;
+}
+
+/* Remove any potential hiding of markers */
+.hidden-marker {
+  display: block !important;
+}
+
+/* Ensure marker container is visible */
+.leaflet-marker-pane {
+  z-index: 600 !important;
+}
+
+/* Ensure marker is above other layers */
+.leaflet-marker-icon {
+  z-index: 1000 !important;
+}

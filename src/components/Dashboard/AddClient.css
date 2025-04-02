@@ -1,0 +1,308 @@
+/* AddClient.css */
+.add-client-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .client-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group {
+    width: 100%;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .form-group.half {
+    width: 50%;
+  }
+  
+  .helper-text {
+    display: block;
+    margin-top: 0.5rem;
+    color: #777;
+    font-size: 0.9rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .cancel-button {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0.8rem 1.5rem;
+    transition: var(--transition);
+    border: none;
+    border-radius: 12px;
+  }
+  
+  .cancel-button:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .submit-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    transition: var(--transition);
+    border: none;
+    border-radius: 12px;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #3a5a80;
+  }
+  
+  .submit-button:disabled {
+    background-color: #a0b1c5;
+    cursor: not-allowed;
+  }
+  
+  /* React-select custom styling */
+  .react-select-container {
+    width: 100%;
+  }
+  
+  .react-select__control {
+    min-height: 42px !important;
+    border-color: #ddd !important;
+    box-shadow: none !important;
+    border-radius: var(--border-radius) !important;
+  }
+  
+  .react-select__control:hover {
+    border-color: var(--accent-color) !important;
+  }
+  
+  .react-select__control--is-focused {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2) !important;
+  }
+  
+  .react-select__menu {
+    z-index: 100 !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .react-select__option--is-focused {
+    background-color: rgba(74, 111, 165, 0.1) !important;
+  }
+  
+  .react-select__option--is-selected {
+    background-color: var(--primary-color) !important;
+  }
+  
+  .react-select__multi-value {
+    border-radius: 30px !important;
+    padding: 0 0.2rem !important;
+  }
+  
+  .react-select__multi-value__label {
+    padding: 0.2rem 0.5rem !important;
+  }
+  
+  .react-select__multi-value__remove {
+    border-radius: 50% !important;
+    margin-left: 0.2rem !important;
+  }
+  
+  .react-select__multi-value__remove:hover {
+    background-color: rgba(231, 76, 60, 0.2) !important;
+    color: var(--danger-color) !important;
+  }
+  
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 1.5rem;
+    }
+  
+    .form-row {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    .form-group.half {
+      width: 100%;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+    }
+  
+    .cancel-button, .submit-button {
+      width: 100%;
+    }
+  }
+
+  .header-form {
+    color: #114859;
+    padding: 1.5rem;
+    border-bottom: 0.5px solid #e7e0e0;
+  }
+
+  /* Add this to your AddClient.css file */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Add a checkmark icon before the success message text */
+.success-message::before {
+  content: "✓";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Add a simple fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* AddClient.css - Keep all existing styles and add the following */
+
+/* Service Modal Styles */
+.service-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.service-modal {
+  background-color: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  outline: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.service-modal-content {
+  padding: 2rem;
+}
+
+.service-modal-content h3 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+}
+
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.color-picker {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.color-value {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  color: #333;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Error message for the modal */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Add an X icon before the error message text */
+.error-message::before {
+  content: "⚠";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  color: #721c24;
+  font-weight: bold;
+}
+
+/* Style for the "Create New Service" option in dropdown */
+.react-select__option[aria-label="+ Create New Service"] {
+  border-top: 1px dashed #ccc;
+  margin-top: 8px;
+  padding-top: 12px;
+  color: #28a745 !important;
+}
