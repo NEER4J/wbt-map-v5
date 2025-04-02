@@ -480,6 +480,13 @@ const Map = () => {
         }
       },
       mouseover: async (e) => {
+        const layer = e.target;
+        layer.setStyle({
+          weight: 3,
+          color: '#ffffff',
+          fillOpacity: 0.8
+        });
+        layer.bringToFront();
         try {
           if (selectedService === null) return;
           const locationId = feature.properties.locationId;
@@ -554,7 +561,9 @@ const Map = () => {
           layer.openPopup(e.latlng);
         }
       },
-      mouseout: () => {
+      mouseout: (e) => {
+        const layer = e.target;
+        layer.setStyle(getFeatureStyle(feature));
         if (layer._popup && !layer._popup._isOpen) {
           layer.closePopup();
         }
