@@ -1319,6 +1319,48 @@ const Map = () => {
           50% { opacity: 1; }
           100% { opacity: 0.6; }
         }
+
+        .leaflet-container {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
+
+        .leaflet-layer {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
+
+        .leaflet-tile {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
+
+        .leaflet-marker-icon {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
+
+        .leaflet-overlay-pane svg {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
+
+        .leaflet-overlay-pane canvas {
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000;
+          will-change: transform;
+        }
       `}</style>
     </div>
   );

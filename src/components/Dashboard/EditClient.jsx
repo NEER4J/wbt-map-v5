@@ -14,6 +14,8 @@ const EditClient = () => {
   // Form state
   const [client, setClient] = useState({
     business_name: '',
+    address: '',    // Added address field
+    postcode: '',   // Added postcode field
     country: '',
     location_id: '',
     lat: '',
@@ -116,8 +118,8 @@ const EditClient = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!client.business_name || !client.location_id) {
-      setError('Business name and location are required.');
+    if (!client.business_name || !client.location_id || !client.address || !client.postcode) {
+      setError('Business name, address, postcode, and location are required.');
       return;
     }
     
@@ -130,6 +132,8 @@ const EditClient = () => {
         .from('clients')
         .update({
           business_name: client.business_name,
+          address: client.address,         // Added address field
+          postcode: client.postcode,       // Added postcode field
           country: client.country,
           location_id: client.location_id,
           lat: client.lat,
@@ -151,6 +155,7 @@ const EditClient = () => {
       // Insert new client services
       if (selectedServices.length > 0) {
         const clientServicesData = selectedServices.map(serviceId => ({
+          id: crypto.randomUUID(),  // Added UUID generation like in AddClient
           client_id: id,
           service_id: serviceId
         }));
@@ -216,7 +221,36 @@ const EditClient = () => {
                 required
               />
             </div>
+          </div>
+          
+          {/* Added address and postcode fields */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={client.address}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
             
+            <div className="form-group">
+              <label htmlFor="postcode">Postcode</label>
+              <input
+                type="text"
+                id="postcode"
+                name="postcode"
+                value={client.postcode}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+          
+          <div className="form-row">
             <div className="form-group">
               <label htmlFor="country">Country</label>
               <input
@@ -227,9 +261,7 @@ const EditClient = () => {
                 onChange={handleInputChange}
               />
             </div>
-          </div>
-          
-          <div className="form-row">
+            
             <div className="form-group">
               <label htmlFor="location_id">Location</label>
               <select
