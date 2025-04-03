@@ -6,26 +6,21 @@ import { FiMenu } from 'react-icons/fi';
 import Logo from '../../assets/logo2.png';
 import './Dashboard.css';
 import { FcGlobe } from 'react-icons/fc';
-
 const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  
   const handleSignOutClick = () => {
     setShowModal(true);
   };
-  
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/');
   };
-  
   const handleCancel = () => {
     setShowModal(false);
   };
-
   return (
     <div className="dashboard-container">
       {/* Sign Out Modal */}
@@ -53,7 +48,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-      
       <div className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           {sidebarOpen && <img src={Logo} alt="Logo" className="sidebar-logo" />}
@@ -99,5 +93,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

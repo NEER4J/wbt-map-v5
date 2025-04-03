@@ -4,7 +4,6 @@
   box-shadow: var(--box-shadow);
   overflow: hidden;
 }
-
 .edit-client-header {
   padding: 1.5rem;
   border-bottom: 1px solid #eaeaea;
@@ -14,17 +13,14 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
-
 .edit-client-header h2 {
   color: var(--primary-color);
   margin: 0;
 }
-
 .header-actions {
   display: flex;
   gap: 0.75rem;
 }
-
 .cancel-button, 
 .save-button {
   display: flex;
@@ -37,21 +33,17 @@
   cursor: pointer;
   transition: var(--transition);
 }
-
 .cancel-button {
   background-color: #f1f1f1;
   color: #666;
 }
-
 .cancel-button:hover {
   background-color: #e0e0e0;
 }
-
 .save-button {
   background-color: var(--primary-color);
   color: white;
 }
-
 .save-button:hover {
   background-color: #3a5a80;
   transform: translateY(-2px);

@@ -3,62 +3,46 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../utils/supabaseClient';
 import { FaSave, FaTimes } from 'react-icons/fa';
 import './EditClient.css';
-
 const EditClient = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formSubmitting, setFormSubmitting] = useState(false);
-  
-  // Form state
   const [client, setClient] = useState({
     business_name: '',
-    address: '',    // Added address field
-    postcode: '',   // Added postcode field
+    address: '',  
+    postcode: '', 
     country: '',
     location_id: '',
     lat: '',
     lang: ''
   });
-  
-  // Related data
   const [locations, setLocations] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  
   useEffect(() => {
     fetchClientData();
     fetchLocations();
     fetchServices();
   }, [id]);
-  
   const fetchClientData = async () => {
     try {
       setLoading(true);
-      
-      // Fetch client data
       const { data: clientData, error: clientError } = await supabase
         .from('clients')
         .select('*')
         .eq('id', id)
         .single();
-      
       if (clientError) throw clientError;
       if (!clientData) throw new Error('Client not found');
-      
       setClient(clientData);
-      
-      // Fetch client services
       const { data: clientServicesData, error: csError } = await supabase
         .from('client_services')
         .select('service_id')
         .eq('client_id', id);
-      
       if (csError) throw csError;
-      
       setSelectedServices(clientServicesData.map(cs => cs.service_id));
-      
     } catch (error) {
       console.error('Error fetching client data:', error);
       setError('Failed to load client data. Please try again.');
@@ -66,14 +50,12 @@ const EditClient = () => {
       setLoading(false);
     }
   };
-  
   const fetchLocations = async () => {
     try {
       const { data, error } = await supabase
         .from('locations')
         .select('*')
         .order('city_name');
-      
       if (error) throw error;
       setLocations(data || []);
     } catch (error) {
@@ -81,14 +63,12 @@ const EditClient = () => {
       setError('Failed to load locations. Please try again.');
     }
   };
-  
   const fetchServices = async () => {
     try {
       const { data, error } = await supabase
         .from('services')
         .select('*')
         .order('name');
-      
       if (error) throw error;
       setServices(data || []);
     } catch (error) {
@@ -96,7 +76,6 @@ const EditClient = () => {
       setError('Failed to load services. Please try again.');
     }
   };
-  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setClient(prev => ({
@@ -104,7 +83,6 @@ const EditClient = () => {
       [name]: value
     }));
   };
-  
   const handleServiceChange = (serviceId) => {
     setSelectedServices(prev => {
       if (prev.includes(serviceId)) {
@@ -114,26 +92,21 @@ const EditClient = () => {
       }
     });
   };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!client.business_name || !client.location_id || !client.address || !client.postcode) {
       setError('Business name, address, postcode, and location are required.');
       return;
     }
-    
     try {
       setFormSubmitting(true);
       setError(null);
-      
-      // Update client data
       const { error: updateError } = await supabase
         .from('clients')
         .update({
           business_name: client.business_name,
-          address: client.address,         // Added address field
-          postcode: client.postcode,       // Added postcode field
+          address: client.address,        
+          postcode: client.postcode,      
           country: client.country,
           location_id: client.location_id,
           lat: client.lat,
@@ -141,35 +114,24 @@ const EditClient = () => {
           updated_at: new Date().toISOString()
         })
         .eq('id', id);
-      
       if (updateError) throw updateError;
-      
-      // Delete existing client services
       const { error: deleteError } = await supabase
         .from('client_services')
         .delete()
         .eq('client_id', id);
-      
       if (deleteError) throw deleteError;
-      
-      // Insert new client services
       if (selectedServices.length > 0) {
         const clientServicesData = selectedServices.map(serviceId => ({
-          id: crypto.randomUUID(),  // Added UUID generation like in AddClient
+          id: crypto.randomUUID(), 
           client_id: id,
           service_id: serviceId
         }));
-        
         const { error: insertError } = await supabase
           .from('client_services')
           .insert(clientServicesData);
-        
         if (insertError) throw insertError;
       }
-      
-      // Navigate back to client list on success
       navigate('/dashboard/clients');
-      
     } catch (error) {
       console.error('Error updating client:', error);
       setError('Failed to update client. Please try again.');
@@ -177,11 +139,9 @@ const EditClient = () => {
       setFormSubmitting(false);
     }
   };
-  
   if (loading) {
     return <div className="loading-message">Loading client data...</div>;
   }
-  
   return (
     <div className="edit-client-container">
       <div className="edit-client-header">
@@ -203,9 +163,7 @@ const EditClient = () => {
           </button>
         </div>
       </div>
-      
       {error && <div className="error-message">{error}</div>}
-      
       <form className="edit-client-form" onSubmit={handleSubmit}>
         <div className="form-section">
           <h3>Business Information</h3>
@@ -222,8 +180,6 @@ const EditClient = () => {
               />
             </div>
           </div>
-          
-          {/* Added address and postcode fields */}
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="address">Address</label>
@@ -236,7 +192,6 @@ const EditClient = () => {
                 required
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="postcode">Postcode</label>
               <input
@@ -249,7 +204,6 @@ const EditClient = () => {
               />
             </div>
           </div>
-          
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="country">Country</label>
@@ -261,7 +215,6 @@ const EditClient = () => {
                 onChange={handleInputChange}
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="location_id">Location</label>
               <select
@@ -281,7 +234,6 @@ const EditClient = () => {
             </div>
           </div>
         </div>
-        
         <div className="form-section">
           <h3>Map Coordinates</h3>
           <div className="form-row">
@@ -296,7 +248,6 @@ const EditClient = () => {
                 placeholder="e.g. 51.5074"
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="lang">Longitude</label>
               <input
@@ -310,7 +261,6 @@ const EditClient = () => {
             </div>
           </div>
         </div>
-        
         <div className="form-section">
           <h3>Services</h3>
           <div className="services-selection">
@@ -331,5 +281,4 @@ const EditClient = () => {
     </div>
   );
 };
-
 export default EditClient;

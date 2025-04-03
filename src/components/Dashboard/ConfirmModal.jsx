@@ -2,10 +2,8 @@
 import React from 'react';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import './ConfirmModal.css';
-
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, isLoading }) => {
   if (!isOpen) return null;
-
   return (
     <div className="modal-overlay">
       <div className="modal-container">
@@ -17,7 +15,6 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, isLoading })
         </div>
         <div className="modal-body">
           <p>{message || 'Are you sure you want to proceed?'}</p>
-          
           {isLoading && (
             <div className="modal-loader">
               <div className="loader-spinner"></div>
@@ -45,5 +42,4 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, isLoading })
     </div>
   );
 };
-
 export default ConfirmModal;

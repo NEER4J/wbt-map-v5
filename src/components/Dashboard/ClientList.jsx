@@ -4,7 +4,6 @@ import { supabase } from '../../utils/supabaseClient';
 import { FaEdit, FaTrash, FaPlus, FaSearch } from 'react-icons/fa';
 import ConfirmModal from './ConfirmModal';
 import './ClientList.css';
-
 const ClientList = () => {
   const [clients, setClients] = useState([]);
   const [services, setServices] = useState({});
@@ -16,18 +15,14 @@ const ClientList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [clientsPerPage] = useState(10);
   const [totalClients, setTotalClients] = useState(0);
-  const [sortField, setSortField] = useState('business_name'); // Changed default sort to business_name
+  const [sortField, setSortField] = useState('business_name'); 
   const [sortOrder, setSortOrder] = useState('asc');
-  
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
   const [isDeletingClient, setIsDeletingClient] = useState(false);
-
   useEffect(() => {
     fetchData();
   }, [currentPage, sortField, sortOrder, searchTerm]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -40,40 +35,32 @@ const ClientList = () => {
       const { count, error: countError } = await query;
       if (countError) throw countError;
       setTotalClients(count || 0);
-      
       const from = (currentPage - 1) * clientsPerPage;
       const to = from + clientsPerPage - 1;
-      
       let clientsQuery = supabase
         .from('clients')
         .select('*')
         .order(sortField, { ascending: sortOrder === 'asc' })
         .range(from, to);
-      
       if (searchTerm) {
         clientsQuery = clientsQuery.ilike('business_name', `%${searchTerm}%`);
       }
-      
       const { data: clientsData, error: clientsError } = await clientsQuery;
       if (clientsError) throw clientsError;
       setClients(clientsData || []);
-      
       const { data: servicesData, error: servicesError } = await supabase
         .from('services')
         .select('*');
       if (servicesError) throw servicesError;
-      
       const servicesMap = {};
       servicesData.forEach(service => {
         servicesMap[service.id] = service;
       });
       setServices(servicesMap);
-      
       const { data: clientServicesData, error: clientServicesError } = await supabase
         .from('client_services')
         .select('*');
       if (clientServicesError) throw clientServicesError;
-      
       const clientServicesMap = {};
       clientServicesData.forEach(cs => {
         if (!clientServicesMap[cs.client_id]) {
@@ -100,7 +87,6 @@ const ClientList = () => {
       setLoading(false);
     }
   };
-
   const handleSort = (field) => {
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -109,38 +95,30 @@ const ClientList = () => {
       setSortOrder('asc');
     }
   };
-
   const handleDeleteClick = (clientId) => {
     setClientToDelete(clientId);
     setModalOpen(true);
   };
-
   const handleDeleteConfirm = async () => {
     try {
       setIsDeletingClient(true);
       const clientId = clientToDelete;
-      
-      // Simulate a delay to show the loader - you can remove this in production
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
       const { error: slotError } = await supabase
         .from('location_slot')
         .delete()
         .eq('client_id', clientId);
       if (slotError) throw slotError;
-      
       const { error: csError } = await supabase
         .from('client_services')
         .delete()
         .eq('client_id', clientId);
       if (csError) throw csError;
-      
       const { error: clientError } = await supabase
         .from('clients')
         .delete()
         .eq('id', clientId);
       if (clientError) throw clientError;
-      
       setClients(clients.filter(client => client.id !== clientId));
       setTotalClients(totalClients - 1);
     } catch (error) {
@@ -152,38 +130,30 @@ const ClientList = () => {
       setClientToDelete(null);
     }
   };
-
   const handleModalClose = () => {
-    if (isDeletingClient) return; // Prevent closing while deleting
+    if (isDeletingClient) return; 
     setModalOpen(false);
     setClientToDelete(null);
   };
-
   const getClientServiceNames = (clientId) => {
     const serviceIds = clientServices[clientId] || [];
     return serviceIds.map(id => services[id]?.name || 'Unknown')
       .join(', ');
   };
-
   const getClientLocation = (locationId) => {
     const location = locations[locationId];
     if (!location) return 'Unknown';
     return `${location.city_name} (${location.postcode_initials})`;
   };
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  
   const totalPages = Math.ceil(totalClients / clientsPerPage);
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-
-  // Find client name for the modal message
   const clientToDeleteName = clientToDelete 
     ? clients.find(client => client.id === clientToDelete)?.business_name 
     : '';
-
   return (
     <div className="client-list-container">
       <div className="client-list-header">
@@ -207,9 +177,7 @@ const ClientList = () => {
           </Link>
         </div>
       </div>
-      
       {error && <div className="error-message">{error}</div>}
-      
       {loading ? (
         <div className="loading-message">Loading clients...</div>
       ) : (
@@ -277,7 +245,6 @@ const ClientList = () => {
               </tbody>
             </table>
           </div>
-          
           {totalPages > 1 && (
             <div className="pagination">
               <button 
@@ -320,5 +287,4 @@ const ClientList = () => {
     </div>
   );
 };
-
 export default ClientList;

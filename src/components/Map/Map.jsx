@@ -606,8 +606,10 @@ const Map = () => {
           pane="overlayPane"
           updateWhenZooming={false}
           updateWhenIdle={true}
-          updateInterval={50}
+          updateInterval={100}
           zIndex={1}
+          interactive={true}
+          bubblingMouseEvents={false}
         />
       );
     }
@@ -621,8 +623,10 @@ const Map = () => {
         pane="overlayPane"
         updateWhenZooming={false}
         updateWhenIdle={true}
-        updateInterval={50}
+        updateInterval={100}
         zIndex={1}
+        interactive={true}
+        bubblingMouseEvents={false}
       />
     );
   }, [processedGeoData, getFeatureStyle, onEachFeature, selectedService, currentZoom]);
@@ -933,7 +937,7 @@ const Map = () => {
         zoom={DEFAULT_ZOOM}
         style={{ height: "88vh", width: "100%" }}
         maxBounds={mapBounds}
-        maxBoundsViscosity={0}
+        maxBoundsViscosity={0.5}
         ref={mapRef}
         zoomControl={true}
         scrollWheelZoom={true}
@@ -945,24 +949,24 @@ const Map = () => {
         markerZoomAnimation={true}
         fadeAnimation={true}
         zoomAnimationDuration={0.3}
-        wheelDebounceTime={20}
+        wheelDebounceTime={50}
         minZoom={4}
         maxZoom={18}
         zoomSnap={0.5}
         preferCanvas={true}
         renderer={L.canvas()}
-        inertia={false}
-        inertiaDeceleration={0}
-        inertiaMaxSpeed={0}
-        tap={false}
+        inertia={true}
+        inertiaDeceleration={1000}
+        inertiaMaxSpeed={1000}
+        tap={true}
         dragging={true}
-        animate={false}
+        animate={true}
         rendererOptions={{
           padding: 0.5,
           tolerance: 0.5,
           updateWhenIdle: true,
           updateWhenZooming: false,
-          updateInterval: 50
+          updateInterval: 100
         }}
       >
         {processedGeoData && renderGeoJSONLayers()}

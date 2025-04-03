@@ -4,10 +4,7 @@ import { supabase } from '../../utils/supabaseClient';
 import Select from 'react-select';
 import Modal from 'react-modal';
 import './AddClient.css';
-
-// Set Modal app element for accessibility
 Modal.setAppElement('#root');
-
 const AddClient = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -25,13 +22,10 @@ const AddClient = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  
-  // New state for service creation
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [newService, setNewService] = useState({ name: '', color: '#4A6FA5' });
   const [serviceCreationError, setServiceCreationError] = useState(null);
   const [serviceCreationLoading, setServiceCreationLoading] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,7 +34,6 @@ const AddClient = () => {
           .select('id, name, color');
         if (servicesError) throw servicesError;
         setServices(servicesData);
-
         const { data: locationsData, error: locationsError } = await supabase
           .from('locations')
           .select('id, city_name, region, postcode_initials');
@@ -53,34 +46,26 @@ const AddClient = () => {
     };
     fetchData();
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-
   const handleServiceChange = (selected) => {
-    // Check if the "Create New" option was selected
     if (selected && selected.some(option => option.value === 'create-new')) {
-      // Remove the "Create New" option from selection
       const filteredSelection = selected.filter(option => option.value !== 'create-new');
       setSelectedServices(filteredSelection);
-      // Open the modal
       setShowServiceModal(true);
     } else {
       setSelectedServices(selected || []);
     }
   };
-
   const handleLocationChange = (selected) => {
     setFormData(prev => ({ ...prev, location_id: selected ? selected.value : null }));
   };
-
   const handleNewServiceChange = (e) => {
     const { name, value } = e.target;
     setNewService(prev => ({ ...prev, [name]: value }));
   };
-
   const validateForm = () => {
     if (!formData.business_name) return 'Business name is required';
     if (!formData.address) return 'Address is required';
@@ -95,18 +80,14 @@ const AddClient = () => {
     if (isNaN(lng) || lng < -180 || lng > 180) return 'Invalid longitude';
     return null;
   };
-
   const createNewService = async () => {
     if (!newService.name.trim()) {
       setServiceCreationError('Service name is required');
       return;
     }
-
     setServiceCreationLoading(true);
     setServiceCreationError(null);
-
     try {
-      // Insert the new service
       const { data: createdService, error: serviceError } = await supabase
         .from('services')
         .insert([{
@@ -115,25 +96,16 @@ const AddClient = () => {
         }])
         .select()
         .single();
-
       if (serviceError) throw serviceError;
-
-      // Add the new service to the services list
       setServices([...services, createdService]);
-
-      // Add the new service to the selected services
       const newServiceOption = {
         value: createdService.id,
         label: createdService.name,
         color: createdService.color
       };
-
       setSelectedServices([...selectedServices, newServiceOption]);
-      
-      // Close the modal and reset the form
       setShowServiceModal(false);
       setNewService({ name: '', color: '#4A6FA5' });
-      
     } catch (error) {
       console.error('Error creating service:', error);
       setServiceCreationError(`Failed to create service: ${error.message || 'Please try again.'}`);
@@ -141,7 +113,6 @@ const AddClient = () => {
       setServiceCreationLoading(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationError = validateForm();
@@ -167,17 +138,14 @@ const AddClient = () => {
         .single();
       if (clientError) throw clientError;
       console.log("CLIENT", client);
-
       const { data: tableInfo, error: tableError } = await supabase
         .rpc('get_client_services_columns');
       console.log("Raw table info:", tableInfo);
-
       const clientServiceData = selectedServices.map(service => ({
         client_id: client.id,
         service_id: service.value
       }));
       console.log("CLIENT SERVICE DATA", clientServiceData);
-
       for (const service of selectedServices) {
         const { error: servicesError } = await supabase
           .from('client_services')
@@ -186,13 +154,11 @@ const AddClient = () => {
             client_id: client.id,
             service_id: service.value
           });
-
         if (servicesError) {
           console.error('Error inserting client service:', servicesError);
           throw servicesError;
         }
       }
-
       for (const service of selectedServices) {
         const { data: slotData, error: slotCheckError } = await supabase
             .from('location_slot')
@@ -203,7 +169,6 @@ const AddClient = () => {
             .limit(1);
         if (slotCheckError) throw slotCheckError;
         console.log("SLOT DATA", slotData);
-
         if (slotData && slotData.length > 0) {
           const { error: slotUpdateError } = await supabase
             .from('location_slot')
@@ -218,8 +183,7 @@ const AddClient = () => {
             .from('location_slot')
             .select('slot_number')
             .eq('location_id', formData.location_id)
-            .eq('service_id', service.value);
-            
+            .eq('service_id', service.value); 
           if (countError) throw countError;
           const nextSlotNumber = existingSlots.length + 1;
           const { error: newSlotError } = await supabase
@@ -234,7 +198,6 @@ const AddClient = () => {
           if (newSlotError) throw newSlotError;
         }
       }
-
       setSuccess(true);
       setFormData({
         business_name: '',
@@ -256,8 +219,6 @@ const AddClient = () => {
       setLoading(false);
     }
   };
-
-  // Create service options including the "Create New" option
   const serviceOptions = [
     ...services.map(service => ({
       value: service.id,
@@ -270,12 +231,10 @@ const AddClient = () => {
       color: '#28a745'
     }
   ];
-
   const locationOptions = locations.map(location => ({
     value: location.id,
     label: `${location.city_name} (${location.postcode_initials}) - ${location.region}`
   }));
-
   const customSelectStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -292,7 +251,6 @@ const AddClient = () => {
       color: state.data.color || '#333'
     })
   };
-
   return (
     <div className="add-client-container">
       <h2 className='header-form'>Add Client</h2>
@@ -315,8 +273,6 @@ const AddClient = () => {
               required
             />
           </div>
-          
-          
           <div className='form-row'>
             <div className="form-group half">
               <label htmlFor="address">Address*</label>
@@ -352,7 +308,6 @@ const AddClient = () => {
               required
             />
           </div>
-          
           <div className="form-row">
             <div className="form-group half">
               <label htmlFor="lat">Latitude*</label>
@@ -379,7 +334,6 @@ const AddClient = () => {
               />
             </div>
           </div>
-          
           <div className="form-group">
             <label htmlFor="services">Services*</label>
             <Select
@@ -394,7 +348,6 @@ const AddClient = () => {
               classNamePrefix="react-select"
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="location">Location*</label>
             <Select
@@ -406,7 +359,6 @@ const AddClient = () => {
               classNamePrefix="react-select"
             />
           </div>
-          
           <div className="form-actions">
             <button 
               type="button" 
@@ -424,8 +376,6 @@ const AddClient = () => {
             </button>
           </div>
         </form>
-
-        {/* Modal for adding a new service */}
         <Modal
           isOpen={showServiceModal}
           onRequestClose={() => setShowServiceModal(false)}
@@ -436,7 +386,6 @@ const AddClient = () => {
           <div className="service-modal-content">
             <h3>Add New Service</h3>
             {serviceCreationError && <div className="error-message">{serviceCreationError}</div>}
-            
             <div className="form-group">
               <label htmlFor="service-name">Service Name*</label>
               <input
@@ -449,7 +398,6 @@ const AddClient = () => {
                 required
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="service-color">Service Color</label>
               <div className="color-picker-container">
@@ -464,7 +412,6 @@ const AddClient = () => {
                 <span className="color-value">{newService.color}</span>
               </div>
             </div>
-            
             <div className="modal-actions">
               <button 
                 type="button" 
@@ -488,5 +435,4 @@ const AddClient = () => {
     </div>
   );
 };
-
 export default AddClient;
