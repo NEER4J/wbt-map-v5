@@ -193,8 +193,10 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-
   padding: 10px 20px;
+}
+.header-left:hover {
+  cursor: pointer;
 }
 .client-search-input {
 
@@ -601,4 +603,8 @@ border-bottom: solid 1px gainsboro;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.sidebar-toggle:hover {
+  cursor: pointer;
 }

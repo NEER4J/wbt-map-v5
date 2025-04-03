@@ -316,27 +316,30 @@ const AddClient = () => {
             />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="address">Address*</label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="postcode">Postcode*</label>
-            <input
-              id="postcode"
-              name="postcode"
-              type="text"
-              value={formData.postcode}
-              onChange={handleChange}
-              required
-            />
+          
+          <div className='form-row'>
+            <div className="form-group half">
+              <label htmlFor="address">Address*</label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group half">
+              <label htmlFor="postcode">Postcode*</label>
+              <input
+                id="postcode"
+                name="postcode"
+                type="text"
+                value={formData.postcode}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="country">Country*</label>
@@ -390,9 +393,6 @@ const AddClient = () => {
               className="react-select-container"
               classNamePrefix="react-select"
             />
-            <small className="helper-text">
-              Select all services that apply to this client or create a new one
-            </small>
           </div>
           
           <div className="form-group">
@@ -405,9 +405,6 @@ const AddClient = () => {
               className="react-select-container"
               classNamePrefix="react-select"
             />
-            <small className="helper-text">
-              Select the location this client is associated with
-            </small>
           </div>
           
           <div className="form-actions">
