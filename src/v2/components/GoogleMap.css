@@ -1,0 +1,773 @@
+.map-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.map-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
+  display: flex;
+  flex-direction: column;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.header-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.map-header .logo {
+  height: 40px;
+  width: auto;
+  margin-left: 5px;
+}
+
+.search-container {
+
+  z-index: 1000;
+  width: 400px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #2196f3;
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9e9e9e;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  background: transparent;
+  border: none;
+  color: #212121b7;
+  font-size: 15px;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #9e9e9e;
+}
+
+.search-results {
+  margin-top: 8px;
+  background: #ffffff;
+  border-radius: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  width: 100%;
+}
+
+.search-result-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.2s ease;
+  justify-content: space-between;
+  display: flex;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.business-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* margin-bottom: 8px; */
+}
+
+.business-details {
+  flex: 1;
+}
+
+.business-name {
+  font-weight: 500;
+  color: #212121;
+  font-size: 15px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.business-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.postcode {
+  color: #757575;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.postcode svg {
+  width: 14px;
+  height: 14px;
+  color: #9e9e9e;
+}
+
+.services {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.service-tag {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+
+
+/* Modern scrollbar styling */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: #bdbdbd;
+}
+
+.service-filter {
+  padding: 6px 12px;
+  border: none;
+  border-bottom: 4px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: #495057;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+  border-top: solid 4px transparent;
+}
+
+.service-filter:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.service-filter.active {
+  border-color: currentColor;
+  border-top: solid 4px transparent;
+}
+
+.service-filter::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background-color: currentColor;
+  vertical-align: middle;
+}
+
+.service-filters {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0px;
+  margin-right: 24px;
+}
+
+.login-button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #0d6efd;
+  color: white;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+  width: 90%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 15px;
+}
+
+.login-button:hover {
+  background: #2bc185;
+  opacity: 0.95;
+}
+
+/* Hide scrollbar but keep functionality */
+.service-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.service-filters {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (max-width: 768px) {
+  .header-top {
+    flex-direction: row;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .logo {
+    height: 30px !important;
+    margin-left: 5px !important;
+}
+
+  .search-container {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .header-bottom {
+    padding: 0px 10px;
+    padding-right: 0;
+  }
+
+  .service-filters {
+    margin-right: 0px;
+  }
+
+  .map-content {
+    margin-top: 110px;
+  }
+}
+
+.map-content {
+  display: flex;
+  width: 100%;
+  margin-top: 96px; /* Adjusted for two-row header */
+}
+
+.google-map-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+.map-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #333;
+}
+
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.info-window {
+  padding: 12px;
+  width: auto;
+  max-width: 240px;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.info-window h3 {
+  margin: 0 0 6px 0;
+  margin-top: -5px !important;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-window-address {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.info-window-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+
+
+/* Region info window styles */
+.region-info-window {
+  min-width: 200px;
+  background: white;
+  border-radius: 8px;
+}
+
+.region-info-window h3 {
+  margin: 0 0 0px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  padding-bottom: 5px;
+}
+
+.services-availability {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.slot-count {
+  color: #666;
+  font-size: 12px;
+}
+
+.business-name {
+  font-size: 13px;
+  color: #333;
+}
+
+.slot-status {
+  font-size: 12px;
+  padding: 2px 12px;
+  border-radius: 12px;
+  background: #e8f5e9;
+  color: #2ecc71;
+}
+
+.no-services {
+  text-align: center;
+  color: #666;
+  padding: 12px;
+  font-size: 13px;
+  border: solid 1px rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}
+
+.services-list {
+  margin-top: 10px;
+}
+
+.services-list h4 {
+  margin: 10px 0 5px 0;
+  font-size: 14px;
+  color: #114859;
+}
+
+.services-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.services-list li {
+  font-size: 13px;
+  color: #666;
+  padding: 2px 0;
+}
+
+.businesses-list {
+  list-style: none;
+  margin: 5px 0 0 0;
+  padding: 0;
+  border-top: 1px solid #dee2e6;
+  padding-top: 5px;
+}
+
+.businesses-list li {
+  font-size: 0.9em;
+  color: #666;
+  padding: 2px 0;
+}
+
+/* .business-name:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #adb5bd;
+} */
+
+.gm-ui-hover-effect {
+  /* This targets the default Google Maps InfoWindow close button */
+  top: 0 !important;
+  right: 0 !important;
+  padding: 4px !important;
+  opacity: 0.8 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50% !important;
+  margin: 4px !important;
+  display: none !important;
+}
+
+.gm-ui-hover-effect:hover {
+  opacity: 1 !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.gm-ui-hover-effect img {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Ensure proper positioning of the close button container */
+.gm-style .gm-style-iw-c {
+  padding-right: 12px !important;
+}
+
+.gm-style .gm-style-iw-t::after {
+  background: linear-gradient(45deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%);
+}
+
+/* Fix InfoWindow sizing */
+.gm-style-iw.gm-style-iw-c {
+  padding: 0 !important;
+  max-height: none !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+  max-height: none !important;
+  max-width: none !important;
+  margin-bottom: 0 !important;
+}
+
+/* Remove scrollbars */
+.gm-style-iw-d::-webkit-scrollbar { 
+  display: none !important;
+}
+
+/* Adjust the container to fit content */
+.gm-style-iw {
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Update info window base styles to work with new container */
+.info-window {
+  padding: 12px;
+  width: auto;
+  max-width: 280px;
+  margin: 0;
+}
+
+.region-info-window {
+  padding: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+  width: auto;
+  max-width: 240px;
+  margin: 0;
+  margin-bottom: 10px !important;
+} 
+
+.gm-sty1e-iw-ch{
+  display: none !important;
+  padding: 0 !important;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 0;
+}
+
+.service-name {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.slot-count {
+  font-size: 11px;
+  color: #666;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.business-service {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 0;
+}
+
+.business-name {
+  font-size: 11px;
+  color: #333;
+  flex: 1;
+  margin-right: 8px;
+}
+
+.slot-status {
+  font-size: 10px;
+  color: #2ecc71;
+  background: rgba(46, 204, 113, 0.1);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.available-slots {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.service-item {
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: solid 1px rgba(0, 0, 0, 0.05);
+}
+
+.service-item:last-child {
+  margin-bottom: 0;
+}
+
+.services-availability {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hamburger-menu {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-menu span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #333;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu span::before,
+.hamburger-menu span::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: #333;
+  transition: all 0.3s ease;
+  left: 0;
+}
+
+.hamburger-menu span::before {
+  top: -6px;
+}
+
+.hamburger-menu span::after {
+  bottom: -6px;
+}
+
+.hamburger-menu.active span {
+  background: transparent;
+}
+
+.hamburger-menu.active span::before {
+  transform: rotate(45deg);
+  top: 0;
+  left: 0 !important;
+}
+
+.hamburger-menu.active span::after {
+  transform: rotate(-45deg);
+  bottom: 0;
+  left: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .location-sidebar {
+    position: fixed;
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .location-sidebar.active {
+    transform: translateX(0);
+  }
+
+  .hamburger-menu {
+    display: flex;
+  }
+
+
+}
+
+.location-sidebar {
+  width: 300px;
+  background: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 900;
+  transition: transform 0.3s ease;
+  height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+
+.region-tab {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #495057;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  border: solid 1px gainsboro;
+}
+
+.region-tabs{
+  padding: 22px !important
+}
+
+.cities-list{
+  padding: 15px;
+}
+
+/* Scrollbar styling for search results */
+.search-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 8px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
