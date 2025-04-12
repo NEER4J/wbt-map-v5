@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import AddClient from './components/Dashboard/AddClient'
 import ClientList from './components/Dashboard/ClientList'
 import EditClient from './components/Dashboard/EditClient'
+import GoogleMapPage from './google-maps/components/GoogleMapPage'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -22,6 +23,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Map />} />
+      <Route path="/google-map" element={<GoogleMapPage />} />
       <Route path="/login" element={!session ? <LoginForm /> : <Navigate to="/dashboard" />} />
       <Route path="/dashboard" element={session ? <Dashboard /> : <Navigate to="/login" />}>
         <Route path="clients" element={<ClientList />} />

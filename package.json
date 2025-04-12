@@ -13,6 +13,7 @@
     "seed": "node src/utils/supabaseClient.js"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.6",
     "@supabase/supabase-js": "^2.49.1",
     "@turf/area": "^7.2.0",
     "@turf/boolean-point-in-polygon": "^7.2.0",
