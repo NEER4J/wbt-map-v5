@@ -1,18 +1,7 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/v2",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/v2/(.*)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "rewrites": [
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
     {
