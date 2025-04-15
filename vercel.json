@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/v2", "destination": "/index.html" },
+    { "source": "/v2/(.*)", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -16,5 +18,11 @@
         }
       ]
     }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/v2", "dest": "/" },
+    { "src": "/v2/(.*)", "dest": "/" },
+    { "src": "/(.*)", "dest": "/" }
   ]
 } 
