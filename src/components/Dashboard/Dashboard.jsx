@@ -72,7 +72,7 @@ const Dashboard = () => {
             <FaList className="nav-icon" /> {sidebarOpen && <span>Client List</span>}
           </Link>
           <Link 
-            to="/" 
+            to="/v2" 
             className="view-map-link"
           >
             <FcGlobe className="nav-icon" /> {sidebarOpen && <span>View Map</span>}

@@ -27,6 +27,7 @@
   justify-content: space-between;
   padding: 1.5rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #114859 !important;
 }
 
 .sidebar-header:hover {
@@ -53,6 +54,7 @@
 .sidebar-nav {
   flex: 1;
   padding: 1.5rem 0;
+  background-color: #114859 !important;
 }
 
 .sidebar-nav a {
@@ -127,6 +129,7 @@
 .sidebar-footer {
   padding: 1.5rem 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #114859 !important;
 }
 
 .signout-button {

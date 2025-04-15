@@ -168,7 +168,7 @@ const ClientList = () => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1); 
               }}
-              className="search-input"
+              className="search-inputs"
             />
             <FaSearch className="search-icon" />
           </div>

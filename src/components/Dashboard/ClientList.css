@@ -32,7 +32,7 @@
     position: relative;
   }
   
-  .search-input {
+  .search-inputs {
     padding: 0.7rem 1rem 0.7rem 2.5rem;
     border: 1px solid #e0e0e0;
     border-radius: 30px;
@@ -41,7 +41,7 @@
     transition: var(--transition);
   }
   
-  .search-input:focus {
+  .search-inputs:focus {
     width: 300px;
     border-color: var(--accent-color);
   }
@@ -217,7 +217,7 @@
       align-items: stretch;
     }
     
-    .search-input, .search-input:focus {
+    .search-inputs, .search-inputs:focus {
       width: 100%;
     }
     
