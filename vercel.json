@@ -1,8 +1,18 @@
 {
-  "rewrites": [
-    { "source": "/v2", "destination": "/index.html" },
-    { "source": "/v2/(.*)", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "version": 2,
+  "routes": [
+    {
+      "src": "/v2",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/v2/(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ],
   "headers": [
     {
@@ -18,11 +28,5 @@
         }
       ]
     }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/v2", "dest": "/" },
-    { "src": "/v2/(.*)", "dest": "/" },
-    { "src": "/(.*)", "dest": "/" }
   ]
 } 
