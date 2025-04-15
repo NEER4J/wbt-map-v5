@@ -21,61 +21,66 @@ const EditClient = () => {
   const [locations, setLocations] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
+
   useEffect(() => {
+    const fetchClientData = async () => {
+      try {
+        setLoading(true);
+        const { data: clientData, error: clientError } = await supabase
+          .from('clients')
+          .select('*')
+          .eq('id', id)
+          .single();
+        if (clientError) throw clientError;
+        if (!clientData) throw new Error('Client not found');
+        setClient(clientData);
+        const { data: clientServicesData, error: csError } = await supabase
+          .from('client_services')
+          .select('service_id')
+          .eq('client_id', id);
+        if (csError) throw csError;
+        setSelectedServices(clientServicesData.map(cs => cs.service_id));
+      } catch (error) {
+        console.error('Error fetching client data:', error);
+        setError('Failed to load client data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchLocations = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('locations')
+          .select('*')
+          .order('city_name');
+        if (error) throw error;
+        setLocations(data || []);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+        setError('Failed to load locations. Please try again.');
+      }
+    };
+
+    const fetchServices = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('*')
+          .order('name');
+        if (error) throw error;
+        setServices(data || []);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        setError('Failed to load services. Please try again.');
+      }
+    };
+
     fetchClientData();
     fetchLocations();
     fetchServices();
   }, [id]);
-  const fetchClientData = async () => {
-    try {
-      setLoading(true);
-      const { data: clientData, error: clientError } = await supabase
-        .from('clients')
-        .select('*')
-        .eq('id', id)
-        .single();
-      if (clientError) throw clientError;
-      if (!clientData) throw new Error('Client not found');
-      setClient(clientData);
-      const { data: clientServicesData, error: csError } = await supabase
-        .from('client_services')
-        .select('service_id')
-        .eq('client_id', id);
-      if (csError) throw csError;
-      setSelectedServices(clientServicesData.map(cs => cs.service_id));
-    } catch (error) {
-      console.error('Error fetching client data:', error);
-      setError('Failed to load client data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  const fetchLocations = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('locations')
-        .select('*')
-        .order('city_name');
-      if (error) throw error;
-      setLocations(data || []);
-    } catch (error) {
-      console.error('Error fetching locations:', error);
-      setError('Failed to load locations. Please try again.');
-    }
-  };
-  const fetchServices = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('services')
-        .select('*')
-        .order('name');
-      if (error) throw error;
-      setServices(data || []);
-    } catch (error) {
-      console.error('Error fetching services:', error);
-      setError('Failed to load services. Please try again.');
-    }
-  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setClient(prev => ({
